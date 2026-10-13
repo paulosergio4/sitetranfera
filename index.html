@@ -476,7 +476,7 @@ footer a { color: var(--ink2); }
     <div class="dlg-top"><div><span class="eyebrow">Comprar licença</span><h3 id="dlg-titulo" style="margin-top:10px">Plano</h3></div><button class="x" type="button" id="dlg-x" aria-label="Fechar">×</button></div>
     <label for="c-nome">Nome<input id="c-nome" name="nome" type="text" autocomplete="name" required></label>
     <label for="c-email">E-mail para receber a licença<input id="c-email" name="email" type="email" autocomplete="email" required></label>
-    <label for="c-doc">CNPJ da empresa<input id="c-doc" name="documento" type="text" inputmode="numeric" autocomplete="off"></label>
+    <label for="c-doc">CPF ou CNPJ<input id="c-doc" name="documento" type="text" inputmode="numeric" autocomplete="off" maxlength="18" placeholder="000.000.000-00 ou 00.000.000/0000-00"></label>
     <button class="btn primary" type="submit" id="c-btn">Ir para o pagamento</button>
     <div id="c-msg" role="status" aria-live="polite" hidden></div>
   </form>
@@ -568,10 +568,18 @@ $$("[data-plano]").forEach(b => b.addEventListener("click", () => {
   if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
 }));
 $("#dlg-x").addEventListener("click", () => dlg.close ? dlg.close() : dlg.removeAttribute("open"));
+function mascaraDoc(v) {
+  const d = v.replace(/\D/g, "").slice(0, 14);
+  if (d.length <= 11) return d.replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  return d.replace(/^(\d{2})(\d)/, "$1.$2").replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3").replace(/\.(\d{3})(\d)/, ".$1/$2").replace(/(\d{4})(\d)/, "$1-$2");
+}
+$("#c-doc").addEventListener("input", e => { e.target.value = mascaraDoc(e.target.value); });
 $("#form-compra").addEventListener("submit", async ev => {
   ev.preventDefault();
   const msg = $("#c-msg"), nome = $("#c-nome").value.trim(), email = $("#c-email").value.trim();
   if (!nome || !/^\S+@\S+\.\S+$/.test(email)) return mostra(msg, "Informe nome e e-mail válidos.", "err");
+  const docDig = $("#c-doc").value.replace(/\D/g, "");
+  if (docDig && docDig.length !== 11 && docDig.length !== 14) return mostra(msg, "CPF deve ter 11 dígitos e CNPJ 14.", "err");
   if (!CONFIG.API_BASE) return mostra(msg, PREVIA);
   const btn = $("#c-btn"); btn.disabled = true; btn.textContent = "Abrindo o pagamento…";
   try {
