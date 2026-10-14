@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Transfera</title>
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="icone-32.png">
@@ -101,6 +106,7 @@ nav.links a:hover { color: var(--ink); }
 .term-head { display: flex; justify-content: space-between; gap: 12px; padding: 8px 14px; background: #1a2a8c; color: #fff; font-size: .72rem; letter-spacing: .06em; }
 .term-body { padding: 14px 16px 16px; overflow-x: auto; }
 .term pre { margin: 0; font: inherit; white-space: pre; }
+@media (max-width: 520px) { .term { font-size: .68rem; } .term pre { white-space: pre-wrap; overflow-wrap: anywhere; } .term-body { padding: 12px 12px 14px; } }
 .t-dim { color: var(--term-dim); } .t-cy { color: var(--term-cyan); } .t-ok { color: var(--term-ok); } .t-wa { color: var(--term-warn); }
 .cursor { display: inline-block; width: .6em; height: 1.1em; background: var(--term-warn); vertical-align: -.18em; animation: blink 1.1s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
@@ -237,6 +243,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 footer a { color: var(--ink2); }
 </style>
 
+</head>
+<body>
 <header class="top">
   <div class="bar">
     <a class="logo" href="#topo"><i>⇄</i><span id="brand">Transfera</span></a>
@@ -597,3 +605,5 @@ $("#form-compra").addEventListener("submit", async ev => {
   btn.disabled = false; btn.textContent = "Ir para o pagamento";
 });
 </script>
+</body>
+</html>
